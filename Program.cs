@@ -28,13 +28,28 @@ while (execute)
     {
         //FILTER GAMES
         case "filter":
+            Console.Write(
+            $"{line}{nl}" +
+            $"Inserisci nome gioco: ");
+            cmd = Console.ReadLine() ?? "";
 
+            var videogameList = Manager.FilterGame(cmd);
+            foreach (var v in videogameList)
+            {
+                Console.WriteLine(v);
+            }
+            Console.WriteLine(line);
             break;
 
         //SEARCH GAME
         case "search":
-            var videogame = Manager.SearchGame(1);
-            Console.WriteLine(videogame);
+            Console.Write(
+                $"{line}{nl}" +
+                $"Inserisci ID gioco: ");
+            cmd = Console.ReadLine() ?? "";
+
+            var videogame = Manager.SearchGame(cmd);
+            Console.WriteLine($"{videogame}{nl}{line}");
             break;
 
         //ADD GAME
