@@ -65,11 +65,17 @@ while (execute)
             var date = DateTime.Now;
             Videogame newVg = new Videogame(null, name, overview, date, softHouse);
             Manager.AddGame(newVg);
+            Console.WriteLine(line);
             break;
 
         //DELETE GAME
         case "delete":
-
+            Console.Write(
+            $"{line}{nl}" +
+            $"Inserisci nome gioco: ");
+            long id = Convert.ToInt64(Console.ReadLine());
+            Manager.DeleteGame(id);
+            Console.WriteLine(line);    
             break;
 
         //CLOSE PROGRAM

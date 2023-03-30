@@ -39,6 +39,7 @@ public class VideogameManager
 
                 cmd.ExecuteNonQuery();
                 tran.Commit();
+                Console.WriteLine("Il videogioco é stato aggiunto correttamente.");
             }
             catch (Exception ex)
             {
@@ -52,6 +53,20 @@ public class VideogameManager
         }
     }
 
+    //DELETE GAME
+    public void DeleteGame(long id)
+    {
+        using var conn = new SqlConnection(ConnStr);
+        conn.Open();
+        string query = "DELETE FROM videogames " +
+            "WHERE id=@Id;";
+
+        var cmd = new SqlCommand(query, conn);
+        cmd.Parameters.Add(new SqlParameter("@Id", id));
+
+        int affectedRows = cmd.ExecuteNonQuery();
+        Console.WriteLine($"Record eliminati: {affectedRows}.");
+    }
 
     //SEARCH BY ID
     public Videogame SearchGame(string idq)
