@@ -54,7 +54,17 @@ while (execute)
 
         //ADD GAME
         case "add":
-
+            Console.Write(
+            $"{line}{nl}" +
+            $"Inserisci nome gioco: ");
+            string name = Console.ReadLine() ?? "";
+            Console.Write($"Inserisci descrizione gioco: ");
+            string overview = Console.ReadLine() ?? "";
+            Console.Write("Inserisci Id della software house: ");
+            long softHouse = Convert.ToInt64(Console.ReadLine());
+            var date = DateTime.Now;
+            Videogame newVg = new Videogame(null, name, overview, date, softHouse);
+            Manager.AddGame(newVg);
             break;
 
         //DELETE GAME

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -15,6 +16,42 @@ public class VideogameManager
         ConnStr = connStr;
     }
 
+    //ADD GAME
+    public void AddGame(Videogame vg)
+    {
+        using SqlConnection conn = new SqlConnection(ConnStr);
+        try
+        {
+            conn.Open();
+
+            using SqlTransaction tran = conn.BeginTransaction("");
+
+            try
+            {
+                var query = "INSERT INTO videogames (name, overview, software_house_id, release_date) " +
+                    "VALUES (@Name, @Overview, @SoftHouse, @Date);";
+
+                using SqlCommand cmd = new SqlCommand(query, conn, tran);
+                cmd.Parameters.AddWithValue("@Name", vg.Name);
+                cmd.Parameters.AddWithValue("@Overview", vg.Overview);
+                cmd.Parameters.AddWithValue("@SoftHouse", vg.SoftwareHouse);
+                cmd.Parameters.AddWithValue("@Date", vg.ReleaseDate);
+
+                cmd.ExecuteNonQuery();
+                tran.Commit();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                tran.Rollback();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
 
     //SEARCH BY ID
     public Videogame SearchGame(string idq)
@@ -26,6 +63,7 @@ public class VideogameManager
         List<Videogame> videogame = ReaderSingleParam(query, "Id", idq);
         return videogame[0];
     }
+
 
     //FILTER BY NAME
     public List<Videogame> FilterGame(string name)
@@ -63,13 +101,17 @@ public class VideogameManager
                 var nameIdx = reader.GetOrdinal("name");
                 var name = reader.GetString(nameIdx);
 
+                var overIdx = reader.GetOrdinal("overview");
+                var over = reader.GetString(nameIdx);
+
+
                 var dateIdx = reader.GetOrdinal("release_date");
                 var date = reader.GetDateTime(dateIdx);
 
                 var houseIdx = reader.GetOrdinal("software_house_id");
                 var house = reader.GetInt64(houseIdx);
 
-                videogame = new Videogame(id, name, date, house);
+                videogame = new Videogame(id, name, over, date, house);
                 vgList.Add(videogame);
             }
         }
